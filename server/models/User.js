@@ -1,14 +1,67 @@
-const mongoose= require("mongoose");
+const mongoose = require("mongoose");
+const fs = require("node:fs/promises");
 
-const userSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true
+// ✅ Import the Teacher model before using it in refs or methods
+require("./teacherModel");
+
+const studentSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true
+  },
+  email: String,
+  age: Number,
+  teacherIds: [{ type: mongoose.Schema.Types.ObjectId, ref: "teachers" }],
+},
+  {
+    // Inside schema Options..
+    
+    // methods
+    methods: {
+      findTeacher(callback) {
+        return mongoose.model("teachers").find({ _id: {$in: this.teacherIds} }, callback);
+      }
     },
-    email: String,
-    age: Number
+    
+    // statics
+    statics:{
+      findCaseInsensitiveName(name){
+        return this.find({name:new RegExp(name, 'i')});
+      }
+    },
+
+    // query
+    query:{
+      byAge(age){
+        return this.where({age:age});
+      }
+    }
+
+  }
+)
+
+// pre middleware -- runs before 'SAVE' function
+studentSchema.pre('save', function (next) {
+  this.__v++;
+  next();
 })
 
-const userModel = new mongoose.model("users", userSchema);
+// post middleware -- runs after 'SAVE' function
+studentSchema.post("save", async function (doc) {
+  const filePath = "./post-log.txt";
+  try {
+    await fs.appendFile(filePath, doc.name + "\n");
+  } catch (err) {
+    if (err.code === "ENOENT") { //ENOENT - file is not there
+      await fs.writeFile(filePath, doc.name + "\n");
+    } else {
+      console.error("Error writing to log:", err);
+    }
+  }
+});
 
-module.exports= userModel;
+
+
+const studentModel = new mongoose.model("users", studentSchema);
+
+module.exports = studentModel;
