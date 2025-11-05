@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Announcements</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="./css/style.css " />
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Announcements</h1>
+      <div>
+        <span id="user-info"></span>
+        <button id="logout-btn">Logout</button>
+      </div>
+    </div>
+
+    <div id="announcements-list"></div>
+  </div>
+
+  <!-- Floating + -->
+  <button id="fab" class="fab hidden">+</button>
+
+  <!-- Modal create/edit -->
+  <div id="modal" class="modal-backdrop">
+    <div class="modal">
+      <h3 id="modal-title">Create Announcement</h3>
+      <div class="form-row">
+        <label>Title</label><br/>
+        <input id="ann-title" type="text" />
+      </div>
+      <div class="form-row">
+        <label>Content</label><br/>
+        <textarea id="ann-data" rows="6"></textarea>
+      </div>
+      <div style="display:flex; gap:8px; justify-content:flex-end;">
+        <button id="modal-cancel">Cancel</button>
+        <button id="modal-submit" class="btn-primary">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/announcements.js"></script>
+</body>
+</html>
