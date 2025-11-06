@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Article Manager</title>
+  <link rel="stylesheet" href="articleStyle.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Article Manager</h1>
+    <div id="role-info"></div>
+
+    <!-- Create Form (Visible only for admin) -->
+    <div id="create-form" class="hidden">
+      <h2>Create Article</h2>
+      <input type="text" id="title" placeholder="Title" />
+      <textarea id="description" placeholder="Description"></textarea>
+      <button id="createBtn">Create</button>
+    </div>
+
+    <!-- Articles Section -->
+    <div id="articles-container" class="articles"></div>
+  </div>
+
+  <script src="articleScript.js"></script>
+</body>
+</html>

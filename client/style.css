@@ -1,0 +1,88 @@
+* {
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #6c63ff, #a58eff);
+}
+
+.auth-container {
+  background: white;
+  padding: 2rem 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+  width: 350px;
+  text-align: center;
+}
+
+h2 {
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.form-group {
+  margin-bottom: 1.2rem;
+  text-align: left;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.4rem;
+  color: #555;
+  font-weight: 500;
+}
+
+input {
+  width: 100%;
+  padding: 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+input:focus {
+  border-color: #6c63ff;
+  outline: none;
+}
+
+button {
+  width: 100%;
+  padding: 0.7rem;
+  background-color: #6c63ff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background-color: #5549ff;
+}
+
+.toggle-text {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+#toggle-form {
+  color: #6c63ff;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+#toggle-form:hover {
+  text-decoration: underline;
+}
+
+
