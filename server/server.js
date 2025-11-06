@@ -1,29 +1,30 @@
 const express = require("express");
 const dotenv = require("dotenv");
-const connectDB = require("./config/db");
-const userRoutes = require("./routes/userRoutes");
-const articleRoutes = require("./routes/articleRoutes");
-const bodyParser = require("body-parser");
-const cors = require("cors");
-const { createAdmin } = require("./controllers/userConroller");
+// const connectDB = require("./config/db");
+// const userRoutes = require("./routes/userRoutes");
+// const articleRoutes = require("./routes/articleRoutes");
+// const bodyParser = require("body-parser");
+// const cors = require("cors");
+// const { createAdmin } = require("./controllers/userConroller");
 
 dotenv.config();
-connectDB();
+// connectDB();
 
 
-// createAdmin();
+// createAdmin() //-- use this if you don't already inserted admin;
+
 const app= express();
 
-//MIDDLEWARES
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}))
+//MIDDLEWARES -- hint bodyparser
 
 
-//CORS
-app.use(cors());
 
-app.use("/api/users",userRoutes);
-app.use("/api/articles",articleRoutes);
+//CORS // -- hint use cors()
+
+
+
+// app.use("/api/users",userRoutes);
+// app.use("/api/articles",articleRoutes);
 
 app.get("/",(req,res)=>{
   res.send("Hello developer");

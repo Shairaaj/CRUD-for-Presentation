@@ -1,11 +1,12 @@
-const express = require("express");
-const {getUserById,createUser} = require("../controllers/userConroller");
+// const express = require("express");
+// const {getUserById,createUser} = require("../controllers/userConroller");
 
-const router = express.Router();
-
-
-router.post("/findUser",getUserById);
-router.post("/createUser",createUser);
+// const router = express.Router();
 
 
-module.exports = router;
+// define routes below
+
+
+
+
+// module.exports = router;
