@@ -3,18 +3,20 @@ const articleModel = require("../models/articleModel"); // adjust the path as ne
 // Create a new article
 const createArticle = async (req, res) => {
   try {
-    const { title, description } = req.body;
+    // const { title, description } = req.body;
 
-    if (!title || !description) {
-      return res.status(400).json({ message: "Title and description are required" });
-    }
+    // if (!title || !description) {
+    //   return res.status(400).json({ message: "Title and description are required" });
+    // }
 
-    const newArticle = new articleModel({
-      title,
-      description
-    });
+    // const newArticle = new articleModel({
+    //   title,
+    //   description
+    // });
 
-    await newArticle.save();
+    // await newArticle.save();
+
+    const newArticle = await articleModel.create(req.body);
 
     res.status(201).json({
       message: "Article created successfully",
@@ -47,7 +49,7 @@ const updateArticle = async (req, res) => {
     const updatedArticle = await articleModel.findByIdAndUpdate(
       id,
       { title, description },
-      { new: true, runValidators: true }
+      { new: true}
     );
 
     if (!updatedArticle) {
