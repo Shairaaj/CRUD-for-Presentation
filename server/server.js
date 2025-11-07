@@ -22,6 +22,9 @@ app.use(bodyParser.urlencoded({extended: true}))
 //CORS
 app.use(cors());
 
+
+// Middleware for our routes
+
 app.use("/api/users",userRoutes);
 app.use("/api/articles",articleRoutes);
 
