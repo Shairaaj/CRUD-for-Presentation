@@ -7,6 +7,7 @@ let isSignup = true; // default mode = signup
 
 const backendURL = "http://localhost:3000/api/users/"
 
+// toggle functionality for signup and login...
 toggleForm.addEventListener("click", () => {
   isSignup = !isSignup;
   if (isSignup) {
@@ -23,36 +24,5 @@ toggleForm.addEventListener("click", () => {
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  const name = document.getElementById("name").value.trim();
-  const password = document.getElementById("password").value.trim();
-
-  if (!name || !password) {
-    alert("Please fill all fields");
-    return;
-  }
-
-  const url = isSignup ? "createUser" : "findUser";
-  const payload = { name, password, role: "user" };
-
-  try {
-    const res = await fetch(backendURL+url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
-
-    const data = await res.json();
-
-    if (res.ok) {
-      const {role} = data.user;
-      alert(isSignup ? "Signup successful!" : "Login successful!");
-      localStorage.setItem("role",role);
-      window.location.href = "./article.html";
-    } else {
-      alert(data.message || "Something went wrong");
-    }
-  } catch (err) {
-    console.error("Error:", err);
-    alert("Error connecting to server");
-  }
+  // logic for sending data...  
 });

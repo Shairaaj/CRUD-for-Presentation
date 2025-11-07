@@ -1,5 +1,5 @@
 const API_URL = "http://localhost:3000/api/articles";
-const role = localStorage.getItem("role") || "user";
+const role = '';// get localstorage data
 
 // Element references
 const roleInfo = document.getElementById("role-info");
@@ -17,20 +17,7 @@ form.hidden = role !== "admin";
 /* -------------------------------
    Helper Function: Fetch Wrapper
 --------------------------------*/
-async function apiRequest(path = "", method = "GET", body = null) {
-  const options = {
-    method,
-    headers: { "Content-Type": "application/json" },
-  };
-  if (body) options.body = JSON.stringify(body);
-
-  const response = await fetch(`${API_URL}${path}`, options);
-  if (!response.ok) {
-    console.error("API error:", response.statusText);
-  }
-
-  return response.json().catch(() => ({}));
-}
+// create fetch handler to get better understanding of fetch function.
 
 /* -------------------------------
    Function: Render One Article
@@ -55,12 +42,7 @@ function renderArticle(article) {
 /* -------------------------------
    Function: Load All Articles
 --------------------------------*/
-async function loadArticles() {
-  container.innerHTML = "";
-  const articles = await apiRequest();
-
-  articles.forEach((article) => renderArticle(article));
-}
+//write load articles func
 
 /* -------------------------------
    Function: Handle Admin Actions
@@ -98,20 +80,8 @@ async function handleAdminAction(e) {
 /* -------------------------------
    Function: Create New Article
 --------------------------------*/
-async function createArticle() {
-  const title = titleInput.value.trim();
-  const description = descInput.value.trim();
 
-  if (!title || !description) {
-    alert("⚠️ Please fill out both fields.");
-    return;
-  }
-
-  await apiRequest("", "POST", { title, description });
-  titleInput.value = descInput.value = "";
-  alert("✅ Article created!");
-  loadArticles();
-}
+//write create article func
 
 /* -------------------------------
    Event Listeners
@@ -120,4 +90,4 @@ container.addEventListener("click", handleAdminAction);
 createBtn.addEventListener("click", createArticle);
 
 // Initial load
-loadArticles();
+// loadArticles();
