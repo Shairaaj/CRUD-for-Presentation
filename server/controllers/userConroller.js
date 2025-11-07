@@ -14,7 +14,7 @@ const createAdmin = async () =>{
 
 const createUser = async (req, res) => {
   try {
-    const newUser = new userModel.create(req.body);
+    const newUser = await userModel.create(req.body);
     res.status(201).json({
       message: "User created successfully",
       user: newUser
