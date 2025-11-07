@@ -1,114 +1,123 @@
-const API_URL = "http://localhost:3000/api/articles/"; // adjust backend URL if needed
-const role = localStorage.getItem("role") || "user"; // get role (default 'user')
+const API_URL = "http://localhost:3000/api/articles";
+const role = localStorage.getItem("role") || "user";
 
-// Elements
-const createForm = document.getElementById("create-form");
+// Element references
+const roleInfo = document.getElementById("role-info");
+const form = document.getElementById("create-form");
 const titleInput = document.getElementById("title");
 const descInput = document.getElementById("description");
 const createBtn = document.getElementById("createBtn");
-const articlesContainer = document.getElementById("articles-container");
-const roleInfo = document.getElementById("role-info");
+const container = document.getElementById("articles-container");
+const template = document.getElementById("article-template");
 
-// Set role info
+// Show current role and toggle admin features
 roleInfo.textContent = `Current Role: ${role.toUpperCase()}`;
-if (role === "admin") createForm.classList.remove("hidden");
+form.hidden = role !== "admin";
 
-// Load all articles
+/* -------------------------------
+   Helper Function: Fetch Wrapper
+--------------------------------*/
+async function apiRequest(path = "", method = "GET", body = null) {
+  const options = {
+    method,
+    headers: { "Content-Type": "application/json" },
+  };
+  if (body) options.body = JSON.stringify(body);
+
+  const response = await fetch(`${API_URL}${path}`, options);
+  if (!response.ok) {
+    console.error("API error:", response.statusText);
+  }
+
+  return response.json().catch(() => ({}));
+}
+
+/* -------------------------------
+   Function: Render One Article
+--------------------------------*/
+function renderArticle(article) {
+  const clone = template.content.cloneNode(true);
+  const card = clone.querySelector(".card");
+  const h3 = clone.querySelector("h3");
+  const p = clone.querySelector("p");
+  const actions = clone.querySelector(".admin-actions");
+
+  card.dataset.id = article._id;
+  h3.textContent = article.title;
+  p.textContent = article.description;
+
+  // Show admin actions if role = admin
+  if (role === "admin") actions.hidden = false;
+
+  container.appendChild(clone);
+}
+
+/* -------------------------------
+   Function: Load All Articles
+--------------------------------*/
 async function loadArticles() {
-  try {
-    const res = await fetch(API_URL);
-    const articles = await res.json();
+  container.innerHTML = "";
+  const articles = await apiRequest();
 
-    articlesContainer.innerHTML = "";
-    articles.forEach(article => renderCard(article));
-  } catch (error) {
-    console.error("Error fetching articles:", error);
-  }
+  articles.forEach((article) => renderArticle(article));
 }
 
-// Render each article card
-function renderCard(article) {
-  const card = document.createElement("div");
-  card.className = "card";
-  card.innerHTML = `
-    <h3 contenteditable="false">${article.title}</h3>
-    <p contenteditable="false">${article.description}</p>
-  `;
+/* -------------------------------
+   Function: Handle Admin Actions
+--------------------------------*/
+async function handleAdminAction(e) {
+  const card = e.target.closest(".card");
+  if (!card || role !== "admin") return;
 
-  if (role === "admin") {
-    const editBtn = document.createElement("button");
-    editBtn.textContent = "Edit";
-    editBtn.className = "edit";
+  const id = card.dataset.id;
+  const h3 = card.querySelector("h3");
+  const p = card.querySelector("p");
+  const editBtn = card.querySelector(".edit");
+  const saveBtn = card.querySelector(".save");
 
-    const deleteBtn = document.createElement("button");
-    deleteBtn.textContent = "Delete";
-    deleteBtn.className = "delete";
-
-    const saveBtn = document.createElement("button");
-    saveBtn.textContent = "Save";
-    saveBtn.className = "save";
-    saveBtn.style.display = "none";
-
-    editBtn.onclick = () => {
-      const title = card.querySelector("h3");
-      const desc = card.querySelector("p");
-      title.contentEditable = "true";
-      desc.contentEditable = "true";
-      title.focus();
-      editBtn.style.display = "none";
-      saveBtn.style.display = "inline-block";
-    };
-
-    saveBtn.onclick = async () => {
-      const updatedTitle = card.querySelector("h3").textContent;
-      const updatedDesc = card.querySelector("p").textContent;
-
-      await fetch(`${API_URL}/${article._id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title: updatedTitle, description: updatedDesc })
-      });
-
-      alert("Article updated successfully!");
+  if (e.target.classList.contains("edit")) {
+    h3.contentEditable = p.contentEditable = "true";
+    editBtn.hidden = true;
+    saveBtn.hidden = false;
+  } else if (e.target.classList.contains("save")) {
+    await apiRequest(`/${id}`, "PUT", {
+      title: h3.textContent,
+      description: p.textContent,
+    });
+    alert("✅ Article updated!");
+    loadArticles();
+  } else if (e.target.classList.contains("delete")) {
+    if (confirm("Are you sure you want to delete this article?")) {
+      await apiRequest(`/${id}`, "DELETE");
+      alert("🗑️ Article deleted!");
       loadArticles();
-    };
-
-    deleteBtn.onclick = async () => {
-      if (confirm("Are you sure to delete this article?")) {
-        await fetch(`${API_URL}/${article._id}`, { method: "DELETE" });
-        alert("Article deleted!");
-        loadArticles();
-      }
-    };
-
-    card.appendChild(editBtn);
-    card.appendChild(saveBtn);
-    card.appendChild(deleteBtn);
+    }
   }
-
-  articlesContainer.appendChild(card);
 }
 
-// Create new article
-createBtn.addEventListener("click", async () => {
+/* -------------------------------
+   Function: Create New Article
+--------------------------------*/
+async function createArticle() {
   const title = titleInput.value.trim();
   const description = descInput.value.trim();
 
   if (!title || !description) {
-    alert("Please fill in all fields!");
+    alert("⚠️ Please fill out both fields.");
     return;
   }
 
-  await fetch(API_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ title, description })
-  });
-
-  titleInput.value = "";
-  descInput.value = "";
+  await apiRequest("", "POST", { title, description });
+  titleInput.value = descInput.value = "";
+  alert("✅ Article created!");
   loadArticles();
-});
+}
+
+/* -------------------------------
+   Event Listeners
+--------------------------------*/
+container.addEventListener("click", handleAdminAction);
+createBtn.addEventListener("click", createArticle);
 
 // Initial load
 loadArticles();

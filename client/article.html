@@ -11,15 +11,28 @@
     <h1>Article Manager</h1>
     <div id="role-info"></div>
 
-    <!-- Create Form (Visible only for admin) -->
-    <div id="create-form" class="hidden">
+    <!-- Create Form -->
+    <div id="create-form" hidden>
       <h2>Create Article</h2>
       <input type="text" id="title" placeholder="Title" />
       <textarea id="description" placeholder="Description"></textarea>
       <button id="createBtn">Create</button>
     </div>
 
-    <!-- Articles Section -->
+    <!-- Article Template -->
+    <template id="article-template">
+      <div class="card">
+        <h3></h3>
+        <p></p>
+        <div class="admin-actions" hidden>
+          <button class="edit">Edit</button>
+          <button class="save" hidden>Save</button>
+          <button class="delete">Delete</button>
+        </div>
+      </div>
+    </template>
+
+    <!-- Where all articles will appear -->
     <div id="articles-container" class="articles"></div>
   </div>
 
